@@ -7,7 +7,27 @@ from matrix import *
   # height and depth dimensions.
   # ====================
 def add_box( points, x, y, z, width, height, depth ):
-    pass
+    w=width
+    h=height
+    d=depth
+    
+    add_edge(points, x, y, z, x+w, y, z)
+    add_edge(points, x+w, y, z, x+w, y+h, z)
+    add_edge(points, x+w, y+h, z, x, y+h, z)
+    add_edge(points, x, y, z, x, y+h, z)
+    
+    add_edge(points, x, y, z, x, y, z+d)
+    add_edge(points, x, y, z+d, x+w, y, z+d)
+    add_edge(points, x+w, y, z+d, x+w, y, z)
+        
+    add_edge(points, x, y, z+d, x, y+h, z+d)
+    add_edge(points, x, y+h, z+d, x, y+h, z)
+  
+    add_edge(points, x+w, y, z+d, x+w, y+h, z+d)
+    add_edge(points, x+w, y+h, z+d, x+w, y+h, z)
+
+    add_edge(points, x, y+h, z+d, x+w, y+h, z+d)
+    
   # ====================
   # Generates all the points along the surface
   # of a sphere with center (cx, cy, cz) and
@@ -20,14 +40,18 @@ def generate_sphere( points, cx, cy, cz, r, step ):
     t=0
     while t<=180:
         theta=math.radians(t)
-        m1=[r*math.cos(theta),r*math.sin(theta),0]
+        #m1=[r*math.cos(theta),r*math.sin(theta),0]
         while p<=360:
             phi=math.radians(p)
-            m2=[[1,0,0],[0,math.cos(phi),math.sin(phi)],[0,-1*math.sin(phi),-1*math.cos(phi)]]
-            p+=1
-            matrix_mult(m1,m2)
-            m.append(m2)
-        t+=1
+           # m2=[[1,0,0],[0,math.cos(phi),math.sin(phi)],[0,-1*math.sin(phi),-1*math.cos(phi)]]
+            p+=step
+            #matrix_mult(m2,m1)
+            #print_matrix(m1)
+            #m1[0]+=cx
+            #m1[1]+=cy
+            #m1[2]+=cz
+            m.append([r*math.cos(theta)+cx,r*math.sin(theta)*math.cos(phi)+cy, r*math.sin(theta)*math.sin(phi)+cz])
+        t+=step
     return m
     #pass
 
@@ -38,8 +62,9 @@ def generate_sphere( points, cx, cy, cz, r, step ):
   # necessary points
   # ====================
 def add_sphere( points, cx, cy, cz, r, step ):
-    pass
-
+    m=generate_sphere(points, cx, cy, cz, r, step)
+    for i in m:
+        points.append(i)
 
   # ====================
   # Generates all the points along the surface
@@ -48,7 +73,24 @@ def add_sphere( points, cx, cy, cz, r, step ):
   # Returns a matrix of those points
   # ====================
 def generate_torus( points, cx, cy, cz, r0, r1, step ):
-    pass
+    m=[]
+    p=0
+    t=0
+    while t<=360:
+        theta=math.radians(t)
+        m1=[r*math.cos(theta),r*math.sin(theta),0]
+        while p<=360:
+            phi=math.radians(p)
+            m2=[[1,0,0],[0,math.cos(phi),math.sin(phi)],[0,-1*math.sin(phi),-1*math.cos(phi)]]
+            p+=step
+            matrix_mult(m1,m2)
+            count=0
+            m2[0]+=cx
+            m2[1]+=cy
+            m2[2]+=cz
+            m.append(m2)
+        t+=step
+    return m
 
   # ====================
   # adds all the points for a torus with center
