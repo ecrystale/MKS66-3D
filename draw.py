@@ -36,22 +36,17 @@ def add_box( points, x, y, z, width, height, depth ):
   # ====================
 def generate_sphere( points, cx, cy, cz, r, step ):
     m=[]
-    p=0
-    t=0
-    while t<=180:
-        theta=math.radians(t)
+    phi=0
+    while phi<2*math.pi:
+        theta=0
+        #theta=math.radians(t)
         #m1=[r*math.cos(theta),r*math.sin(theta),0]
-        while p<=360:
-            phi=math.radians(p)
-           # m2=[[1,0,0],[0,math.cos(phi),math.sin(phi)],[0,-1*math.sin(phi),-1*math.cos(phi)]]
-            p+=step
-            #matrix_mult(m2,m1)
-            #print_matrix(m1)
-            #m1[0]+=cx
-            #m1[1]+=cy
-            #m1[2]+=cz
+        while theta<math.pi:
+            #phi=math.radians(p)
+        
             m.append([r*math.cos(theta)+cx,r*math.sin(theta)*math.cos(phi)+cy, r*math.sin(theta)*math.sin(phi)+cz])
-        t+=step
+            theta+=step
+        phi+=step
     return m
     #pass
 
@@ -62,9 +57,9 @@ def generate_sphere( points, cx, cy, cz, r, step ):
   # necessary points
   # ====================
 def add_sphere( points, cx, cy, cz, r, step ):
-    m=generate_sphere(points, cx, cy, cz, r, step)
-    for i in m:
-        points.append(i)
+        m=generate_sphere(points, cx, cy, cz, r, step)
+        for i in m:
+            add_edge(points,i[0],i[1],i[2],i[0]+1,i[1]+1,i[2]+1)
 
   # ====================
   # Generates all the points along the surface
@@ -74,22 +69,23 @@ def add_sphere( points, cx, cy, cz, r, step ):
   # ====================
 def generate_torus( points, cx, cy, cz, r0, r1, step ):
     m=[]
-    p=0
-    t=0
-    while t<=360:
-        theta=math.radians(t)
-        m1=[r*math.cos(theta),r*math.sin(theta),0]
-        while p<=360:
-            phi=math.radians(p)
-            m2=[[1,0,0],[0,math.cos(phi),math.sin(phi)],[0,-1*math.sin(phi),-1*math.cos(phi)]]
-            p+=step
-            matrix_mult(m1,m2)
-            count=0
-            m2[0]+=cx
-            m2[1]+=cy
-            m2[2]+=cz
-            m.append(m2)
-        t+=step
+    phi=0
+    while phi<2*math.pi:
+        theta=0
+        #m1=[r*math.cos(theta),r*math.sin(theta),0]
+        while theta<2*math.pi:
+            x=(r0*math.cos(theta)*math.cos(phi))+(r1*math.cos(phi))
+            y=r0*math.sin(theta)
+            z=(-1*r0*math.cos(theta)*math.sin(phi))-(r1*math.sin(phi))
+            #m2=[[],[0,math.cos(phi),math.sin(phi)],[0,-1*math.sin(phi),-1*math.cos(phi)]]
+            theta+=step
+            #matrix_mult(m1,m2)
+            #count=0
+            #m2[0]+=cx
+            #m2[1]+=cy
+            #m2[2]+=cz
+            m.append([x,y,z])
+        phi+=step
     return m
 
   # ====================
@@ -99,8 +95,9 @@ def generate_torus( points, cx, cy, cz, r0, r1, step ):
   # necessary points
   # ====================
 def add_torus( points, cx, cy, cz, r0, r1, step ):
-    pass
-
+    m=generate_torus(points, cx, cy, cz, r0, r1, step)
+    for i in m:
+        add_edge(points,i[0],i[1],i[2],i[0]+1,i[1]+1,i[2]+1)
 
 
 def add_circle( points, cx, cy, cz, r, step ):
@@ -139,7 +136,7 @@ def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
 
 def draw_lines( matrix, screen, color ):
     if len(matrix) < 2:
-        print 'Need at least 2 points to draw'
+        print ('Need at least 2 points to draw')
         return
 
     point = 0
