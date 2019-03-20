@@ -1,0 +1,25 @@
+ident
+sphere
+200 300 100 15
+sphere
+300 300 100 15
+box
+150 150 0 200 200 100
+box
+300 150 100 50 50 50
+box
+210 250 100 70 20 20
+box
+150 150 100 50 50 50
+torus
+290 100 250 20 100
+rotate 
+x 30
+rotate 
+y 30
+rotate 
+z 30
+apply
+display
+save
+ok.png
