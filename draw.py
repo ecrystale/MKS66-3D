@@ -74,9 +74,9 @@ def generate_torus( points, cx, cy, cz, r0, r1, step ):
         theta=0
         #m1=[r*math.cos(theta),r*math.sin(theta),0]
         while theta<2*math.pi:
-            x=(r0*math.cos(theta)*math.cos(phi))+(r1*math.cos(phi))
-            y=r0*math.sin(theta)
-            z=(-1*r0*math.cos(theta)*math.sin(phi))-(r1*math.sin(phi))
+            x=(r0*math.cos(theta)*math.cos(phi))+(r1*math.cos(phi))+cx
+            y=r0*math.sin(theta)+cy
+            z=(-1*r0*math.cos(theta)*math.sin(phi))-(r1*math.sin(phi))+cz
             #m2=[[],[0,math.cos(phi),math.sin(phi)],[0,-1*math.sin(phi),-1*math.cos(phi)]]
             theta+=step
             #matrix_mult(m1,m2)
